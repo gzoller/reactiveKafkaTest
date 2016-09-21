@@ -24,10 +24,10 @@ class KafkaSpec() extends FunSpec with Matchers with BeforeAndAfterAll {
   implicit val m = ActorMaterializer(
     ActorMaterializerSettings(as)
       .withAutoFusing(false)
-      .withInputBuffer(32, 32)
+  // .withInputBuffer(32, 32)
   )
 
-  val props = Map("auto.offset.reset" -> "earliest")
+  // val props = Map("auto.offset.reset" -> "earliest")
 
   // Set server.propertise in /opt/kakfa in world server:
   override def beforeAll() {
@@ -49,11 +49,13 @@ class KafkaSpec() extends FunSpec with Matchers with BeforeAndAfterAll {
 
   describe("Kafka Must...") {
     it("Is fast - Reactive-Kafka") {
-      RunTest( 1000000, producer, kafkaHost, groupId, topic )
+      // RunTest2( 1000000, producer, kafkaHost, groupId, topic )
+      val rt3 = akka.foo.RunTest3(2000000, producer, kafkaHost, groupId, topic)
+      rt3.consumerAtLeastOnceBatched(10000)
     }
-   }
+  }
 
-  def worldWait(limit: Int = 30) = {
+  def worldWait(limit: Int = 60) = {
     println("++ Starting the World")
     val worldId = s"$pwd/src/test/resources/startWorld.sh $extraPath".!!
     while (cheapGet(s"http://${getDockerIP()}:${getDockerPort(worldId, 80)}/status").isEmpty) { Thread.sleep(500) }

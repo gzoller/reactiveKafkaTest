@@ -32,7 +32,7 @@ case class Producer() {
   }
 
   def create(kafkaHost: String, zookeeper: String, topic: String) {
-    val numPartitions = 4
+    val numPartitions = 1
     val replicationFactor = 1
     val topicConfig = new java.util.Properties
     val sessionTimeoutMs = 10000

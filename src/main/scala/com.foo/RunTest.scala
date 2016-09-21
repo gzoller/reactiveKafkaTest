@@ -14,8 +14,7 @@ import akka.stream._
 import akka.actor._
 import java.util.concurrent.LinkedBlockingQueue
 
-
-case class RunTest(num:Int, producer:Producer, kafkaHost:String, groupId:String, topic:String)(implicit system:ActorSystem, mat:Materializer) {
+case class RunTest(num: Int, producer: Producer, kafkaHost: String, groupId: String, topic: String)(implicit system: ActorSystem, mat: Materializer) {
   producer.populate(num, topic)
   Thread.sleep(2000)
   partitionInfo(topic)
@@ -38,10 +37,10 @@ case class RunTest(num:Int, producer:Producer, kafkaHost:String, groupId:String,
     val src = Consumer.committableSource(consumerSettings, Subscriptions.topics(topic))
 
     // Simulated load -- real project would have a workflow here
-    val work = Flow[In].map { i => 
+    val work = Flow[In].map { i =>
+      count.add(1)
       i
     }.batch(max = 100, first => CommittableOffsetBatch.empty.updated(first.committableOffset)) { (batch, elem) =>
-      count.add(1)
       batch.updated(elem.committableOffset)
     }
 
@@ -54,14 +53,13 @@ case class RunTest(num:Int, producer:Producer, kafkaHost:String, groupId:String,
     ClosedShape
   })
 
-
   //
   //  The actual test run
   //
   Thread.sleep(3000)
   val now = System.currentTimeMillis()
   flow.run()
-  while (count.size < num && System.currentTimeMillis() > now + 20000) Thread.sleep(500)  // Loop until done or timeout
+  while (count.size < num && System.currentTimeMillis() > now + 20000) Thread.sleep(500) // Loop until done or timeout
   val later = System.currentTimeMillis()
   val tps = (later - now) / 1000.0
 

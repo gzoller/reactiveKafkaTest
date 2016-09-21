@@ -1,6 +1,9 @@
 import sbt._
 import Keys._
 
+import com.typesafe.sbt.SbtScalariform._
+import scalariform.formatter.preferences._
+
 object Build extends Build {
   import Dependencies._
 
@@ -9,6 +12,12 @@ object Build extends Build {
     scalaVersion                := "2.11.8",
     version                     := "0.4.2",
     parallelExecution in Test   := false,
+    ScalariformKeys.preferences := ScalariformKeys.preferences.value
+      .setPreference(AlignArguments, true)
+      .setPreference(AlignParameters, true)
+      .setPreference(AlignSingleLineCaseStatements, true)
+      .setPreference(DoubleIndentClassDeclaration, true)
+      .setPreference(PreserveDanglingCloseParenthesis, true),
     scalacOptions in ThisBuild  ++= Seq("-Ywarn-unused-import", "-Xlint", "-feature", "-deprecation", "-encoding", "UTF8", "-unchecked")
   )
 
