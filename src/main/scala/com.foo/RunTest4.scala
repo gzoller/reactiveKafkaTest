@@ -26,7 +26,7 @@ import akka.stream._
 import akka.actor._
 import scala.concurrent.duration._
 
-case class RunTest3(msgCount: Int, producer: com.foo.Producer, kafkaHost: String, groupId: String, topic: String)(implicit system: ActorSystem) {
+case class RunTest4(msgCount: Int, producer: com.foo.Producer, kafkaHost: String, groupId: String, topic: String)(implicit system: ActorSystem) {
 
   // Pre-populate a topic w/some records (1 million)
   producer.populate(msgCount, topic)
@@ -41,8 +41,7 @@ case class RunTest3(msgCount: Int, producer: com.foo.Producer, kafkaHost: String
 
   def consumerAtLeastOnceBatched(batchSize: Int)(implicit mat: Materializer): Unit = {
     val promise = Promise[Unit]
-    val control = Consumer.committablePartitionedSource(settings, Subscriptions.topics(topic))
-      .flatMapMerge(4, _._2)
+    val control = Consumer.committableSource(settings, Subscriptions.topics(topic))
       .map {
         msg => msg.committableOffset
       }

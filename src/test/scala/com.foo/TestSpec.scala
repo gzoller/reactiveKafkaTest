@@ -50,8 +50,8 @@ class KafkaSpec() extends FunSpec with Matchers with BeforeAndAfterAll {
   describe("Kafka Must...") {
     it("Is fast - Reactive-Kafka") {
       // RunTest2( 1000000, producer, kafkaHost, groupId, topic )
-      val rt3 = akka.foo.RunTest3(2000000, producer, kafkaHost, groupId, topic)
-      rt3.consumerAtLeastOnceBatched(10000)
+      val rt4 = akka.foo.RunTest4(2000000, producer, kafkaHost, groupId, topic)
+      rt4.consumerAtLeastOnceBatched(10000)
     }
   }
 
